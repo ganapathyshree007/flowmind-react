@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { initialJira, initialSlack, initialNotion } from '../data/mockData';
 import { runAgent } from '../geminiAgent';
 
@@ -23,6 +23,22 @@ export function useWorkflow() {
       return next;
     });
   }, []);
+
+  // Load real Jira tickets on mount (shows KAN tickets immediately)
+  useEffect(() => {
+    async function loadRealTickets() {
+      try {
+        const res = await fetch('/api/jira-get-tickets')
+        const data = await res.json()
+        if (data.tickets && data.tickets.length > 0) {
+          setAppStateSynced((prev) => ({ ...prev, jira: data.tickets }))
+        }
+      } catch (err) {
+        console.log('Could not load real tickets:', err.message)
+      }
+    }
+    loadRealTickets()
+  }, [setAppStateSynced])
 
   // ── Callbacks for geminiAgent ─────────────────────────────────────────────
 

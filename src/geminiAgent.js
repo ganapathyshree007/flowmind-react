@@ -2,6 +2,7 @@ import { GoogleGenAI } from '@google/genai';
 import { workflowSteps } from './data/mockData';
 
 const API_KEY = import.meta.env.VITE_GEMINI_KEY;
+const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 // ── Tool declarations ───────────────────────────────────────────────────────
 
@@ -77,7 +78,7 @@ function initials(name) {
 }
 function nextTicketId(jira) {
   const nums = jira.map(t => parseInt(t.id.replace(/\D/g,''),10)).filter(n => !isNaN(n));
-  return `FLW-${(nums.length ? Math.max(...nums) : 105) + 1}`;
+  return `KAN-${(nums.length ? Math.max(...nums) : 5) + 1}`;
 }
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
@@ -86,11 +87,12 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 async function executeTool(toolName, toolArgs, currentState) {
   if (toolName === 'get_jira_tickets') {
     try {
-      const res = await fetch('/api/jira-get-tickets');
-      const data = await res.json();
-      const updatedState = { ...currentState, jira: data.tickets };
-      const list = data.tickets.map(t => `${t.id} [${t.priority}] "${t.title}" — ${t.assignee}`).join('\n');
-      return { result: `Open tickets (${data.tickets.length}):\n${list}`, updatedState };
+      const res = await fetch(`${API_BASE}/api/jira-get-tickets`)
+      const data = await res.json()
+      const tickets = data.tickets || []
+      const updatedState = { ...currentState, jira: tickets, jiraTickets: tickets }
+      const list = tickets.map(t => `${t.id} [${t.priority}] "${t.title}" — ${t.assignee}`).join('\n')
+      return { result: `Open tickets (${tickets.length}):\n${list}`, updatedState }
     } catch (err) {
       console.error('[FlowMind] get_jira_tickets failed:', err);
       return { result: 'Failed to fetch Jira tickets.', updatedState: null };
@@ -99,7 +101,7 @@ async function executeTool(toolName, toolArgs, currentState) {
 
   if (toolName === 'create_jira_ticket') {
     try {
-      const res = await fetch('/api/jira-create-ticket', {
+      const res = await fetch(`${API_BASE}/api/jira-create-ticket`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(toolArgs),
@@ -119,7 +121,7 @@ async function executeTool(toolName, toolArgs, currentState) {
 
   if (toolName === 'post_slack_message') {
     try {
-      await fetch('/api/slack-post-message', {
+      await fetch(`${API_BASE}/api/slack-post-message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(toolArgs),

@@ -1,12 +1,9 @@
 // Mock data for FlowMind — all fake, realistic-looking enterprise data
 
-export const initialJira = [
-  { id: 'FLW-101', title: 'Login page crashes on mobile Safari', priority: 'P1', assignee: 'Arjun K', status: 'open', created: '2 hours ago' },
-  { id: 'FLW-102', title: 'Dashboard widget load time > 8s', priority: 'P2', assignee: 'Priya S', status: 'open', created: '4 hours ago' },
-  { id: 'FLW-103', title: 'Dark mode toggle not persisting across sessions', priority: 'P3', assignee: 'Rohit M', status: 'open', created: 'Yesterday' },
-  { id: 'FLW-104', title: 'CSV export corrupts special characters', priority: 'P2', assignee: 'Meena R', status: 'open', created: 'Yesterday' },
-  { id: 'FLW-105', title: 'Push notification delay on Android 14', priority: 'P3', assignee: 'Dev T', status: 'open', created: '2 days ago' },
-];
+export const initialJiraTickets = [
+  { id: 'KAN-4', title: 'FlowMind AI — Test ticket', priority: 'P2', status: 'Open', assignee: 'Ganapathy Shree E P' },
+  { id: 'KAN-5', title: 'FlowMind AI — automated test ticket', priority: 'P3', status: 'Open', assignee: 'Ganapathy Shree E P' }
+]
 
 export const initialSlack = [
   { user: 'Arjun Kumar', init: 'AK', color: '#00d4aa', msg: 'Hey team — has anyone seen the login crash on iOS? Getting reports from 400+ users.', time: '9:31 AM', channel: '#dev-alerts' },
@@ -93,7 +90,8 @@ export const workflowSteps = {
 };
 
 // ── Alias exports (used by geminiAgent / new imports) ───────────────────────
-export const initialJiraTickets  = initialJira;
+// Back-compat: older imports expect `initialJira`
+export const initialJira = initialJiraTickets;
 export const initialSlackMessages = initialSlack;
 export const initialNotionPage   = initialNotion;
 
