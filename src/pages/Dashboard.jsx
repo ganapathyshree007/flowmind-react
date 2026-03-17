@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWorkflow } from '../hooks/useWorkflow';
 import StepItem from '../components/StepItem';
 import { JiraPanel, SlackPanel, NotionPanel } from '../components/MockPanels';
@@ -116,11 +117,20 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 3-column grid */}
-      <div className={styles.grid}>
-
+      {/* 3-column grid — wrapped in animated container */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className={styles.grid}
+      >
         {/* ── LEFT: Input ── */}
-        <div className={`${styles.panel} card`}>
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className={`${styles.panel} card card-interactive`}
+        >
           <div className={styles.panelHead}>
             <span className={styles.panelHeadLabel}>Command</span>
           </div>
@@ -136,16 +146,38 @@ export default function Dashboard() {
 
             <div className={styles.inputRow}>
               <VoiceButton onResult={setInput} onToast={setToast} currentValue={input} />
-              <button
+              {/* Animated Run button */}
+              <motion.button
                 className={`${styles.runBtn} btn btn-primary`}
                 onClick={handleRun}
                 disabled={isRunning || !input.trim()}
+                whileHover={!isRunning && input.trim() ? { scale: 1.04 } : {}}
+                whileTap={!isRunning && input.trim() ? { scale: 0.96 } : {}}
+                style={{
+                  background: isRunning
+                    ? '#4c1d95'
+                    : 'linear-gradient(135deg, #7C3AED, #4F46E5)',
+                  transition: 'background 0.3s ease',
+                  border: 'none',
+                }}
               >
-                {isRunning
-                  ? <><span className="spinner" /> Running…</>
-                  : <>Run Workflow</>
-                }
-              </button>
+                {isRunning ? (
+                  <>
+                    <span className="spinner" />
+                    Running
+                    {['', '', ''].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+                        style={{ display: 'inline-block', marginLeft: i === 0 ? 1 : 0 }}
+                      >.</motion.span>
+                    ))}
+                  </>
+                ) : (
+                  <>Run Workflow</>
+                )}
+              </motion.button>
             </div>
 
             <div className={styles.divRow} />
@@ -161,10 +193,15 @@ export default function Dashboard() {
               <span>Chrome for voice</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ── MIDDLE: AI Reasoning ── */}
-        <div className={`${styles.panel} card`}>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className={`${styles.panel} card card-interactive`}
+        >
           <div className={styles.panelHead}>
             <span className={styles.panelHeadLabel}>AI Reasoning</span>
             {steps.length > 0 && (
@@ -183,9 +220,19 @@ export default function Dashboard() {
                 <p className={styles.emptySub}>Type a workflow or pick a demo above. Each AI reasoning step will appear here as it executes.</p>
               </div>
             ) : (
-              steps.map((s, i) => (
-                <StepItem key={s.id} step={s} isLast={i === steps.length - 1} />
-              ))
+              <AnimatePresence>
+                {steps.map((s, i) => (
+                  <motion.div
+                    key={s.id || i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3, delay: Math.min(i * 0.08, 0.4), ease: 'easeOut' }}
+                  >
+                    <StepItem step={s} isLast={i === steps.length - 1} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             )}
             {score && (
               <div className={styles.miniBadges}>
@@ -196,10 +243,15 @@ export default function Dashboard() {
             )}
             <div ref={stepsEndRef} />
           </div>
-        </div>
+        </motion.div>
 
         {/* ── RIGHT: Mock Apps ── */}
-        <div className={`${styles.panel} card`}>
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className={`${styles.panel} card card-interactive`}
+        >
           <div className={styles.panelHead}>
             <span className={styles.panelHeadLabel}>Connected Apps</span>
             <span className={styles.appCount}>3 live</span>
@@ -209,8 +261,8 @@ export default function Dashboard() {
             <SlackPanel  messages={appState.slack}   isFlashing={flashSlack}  />
             <NotionPanel page={appState.notion}      isFlashing={flashNotion} />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Score card */}
       {score && (

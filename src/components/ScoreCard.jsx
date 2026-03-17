@@ -1,25 +1,38 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import styles from './ScoreCard.module.css';
 
 function AnimNum({ target, suffix = '' }) {
-  const [val, setVal] = useState(0);
+  const [displayed, setDisplayed] = useState(0);
   useEffect(() => {
-    let cur = 0;
-    const t = setInterval(() => {
-      cur++;
-      setVal(cur);
-      if (cur >= target) clearInterval(t);
-    }, 60);
-    return () => clearInterval(t);
+    let start = 0;
+    const end = target;
+    const duration = 1500;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setDisplayed(end);
+        clearInterval(timer);
+      } else {
+        setDisplayed(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
   }, [target]);
-  return <>{val}{suffix}</>;
+  return <>{displayed}{suffix}</>;
 }
 
 export default function ScoreCard({ score }) {
   if (!score) return null;
   const appsStr = score.apps.join(' · ');
   return (
-    <div className={styles.card}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className={styles.card}
+    >
       <div className={styles.header}>
         <span className={styles.icon}>✅</span>
         <div>
@@ -45,6 +58,6 @@ export default function ScoreCard({ score }) {
           <div className={styles.label}>AI Time</div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

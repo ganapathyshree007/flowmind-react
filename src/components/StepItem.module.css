@@ -13,11 +13,15 @@
 }
 .thinking {
   background: var(--accent-bg); color: var(--accent2);
-  border-color: var(--accent-border); animation: pulse 1.2s infinite;
+  border-color: var(--accent-border); animation: stepPulse 1s ease-in-out infinite;
 }
 .done {
   background: var(--green-bg); color: var(--green);
   border-color: rgba(34,197,94,.2);
+}
+.executing {
+  background: rgba(79,70,229,.15); color: #818cf8;
+  border-color: rgba(79,70,229,.3); animation: stepSpin 1s linear infinite;
 }
 .error {
   background: var(--red-bg); color: var(--red);

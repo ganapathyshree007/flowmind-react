@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.css';
 
 const NAV = [
@@ -15,7 +16,7 @@ export default function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 8);
+    const fn = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
@@ -23,7 +24,13 @@ export default function Navbar() {
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
-    <header className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
+    <header
+      className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}
+      style={scrolled ? {
+        background: 'rgba(10,10,15,0.95)',
+        backdropFilter: 'blur(20px)',
+      } : {}}
+    >
       <div className={styles.inner}>
 
         {/* Brand */}
@@ -41,16 +48,34 @@ export default function Navbar() {
 
         {/* Nav links — desktop */}
         <nav className={styles.links} aria-label="Main navigation">
-          {NAV.map(n => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              className={({ isActive }) =>
-                `${styles.link} ${isActive ? styles.active : ''}`}
-            >
-              {n.label}
-            </NavLink>
-          ))}
+          {NAV.map(n => {
+            const isActive = location.pathname === n.to;
+            return (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                className={`${styles.link} ${isActive ? styles.active : ''}`}
+                style={{ position: 'relative' }}
+              >
+                {n.label}
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 8,
+                      right: 8,
+                      height: '2px',
+                      background: '#7C3AED',
+                      borderRadius: '2px',
+                    }}
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
         {/* Right */}
@@ -70,19 +95,27 @@ export default function Navbar() {
       </div>
 
       {/* Mobile drawer */}
-      {open && (
-        <div className={styles.drawer}>
-          {NAV.map(n => (
-            <NavLink key={n.to} to={n.to}
-              className={({ isActive }) =>
-                `${styles.drawerLink} ${isActive ? styles.drawerActive : ''}`}
-            >
-              <span className={styles.drawerIcon}>{n.icon}</span>
-              {n.label}
-            </NavLink>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className={styles.drawer}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+          >
+            {NAV.map(n => (
+              <NavLink key={n.to} to={n.to}
+                className={({ isActive }) =>
+                  `${styles.drawerLink} ${isActive ? styles.drawerActive : ''}`}
+              >
+                <span className={styles.drawerIcon}>{n.icon}</span>
+                {n.label}
+              </NavLink>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

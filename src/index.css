@@ -59,12 +59,12 @@ body {
 }
 
 /* SCROLLBAR */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #7C3AED; border-radius: 4px; }
 
 /* SELECTION */
-::selection { background: rgba(99,102,241,.2); }
+::selection { background: rgba(124,58,237,0.3); color: white; }
 
 /* ---- TYPOGRAPHY ---- */
 h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -.02em; }
@@ -198,10 +198,24 @@ select option { background: var(--bg3); }
 @keyframes slideInL { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
 @keyframes pulse   { 0%,100%{opacity:1;} 50%{opacity:.4;} }
 @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0;} }
+@keyframes stepPulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.2); } }
+@keyframes stepSpin  { to{ transform:rotate(360deg); } }
+@keyframes shake    { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-4px);} 40%{transform:translateX(4px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);} }
+@keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.6;transform:scale(0.85);} }
 
 .fade-up    { animation: fadeUp .3s ease both; }
 .fade-in    { animation: fadeIn .25s ease both; }
 .slide-inL  { animation: slideInL .25s ease both; }
+
+/* Card hover micro-interaction */
+.card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124,58,237,0.15);
+}
 
 /* ---- DIVIDER ---- */
 .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
