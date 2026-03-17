@@ -1,0 +1,48 @@
+.page { padding: 2rem 1.5rem 4rem; max-width: 1300px; margin: 0 auto; }
+.pageHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; gap: 1rem; }
+.pageTitle { font-size: 2rem; font-weight: 800; margin: .25rem 0 .4rem; letter-spacing: -.03em; }
+.pageSub { font-size: .875rem; color: var(--text2); }
+
+.kpiGrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.kpiCard { padding: 1.25rem; animation: fadeUp .35s ease both; }
+.kpiNum { font-size: 2.1rem; font-weight: 800; letter-spacing: -.04em; color: var(--text); }
+.kpiLabel { font-size: .75rem; color: var(--text2); margin: 5px 0 4px; font-weight: 500; }
+.kpiTrend { font-size: .68rem; color: var(--text3); }
+.trendPos { color: var(--green); }
+
+.chartRow { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+.chartCard { padding: 1.25rem; }
+.chartTitle { font-size: .875rem; font-weight: 700; margin-bottom: 1.25rem; letter-spacing: -.01em; }
+
+/* Bar chart */
+.barChart { display: flex; align-items: flex-end; gap: 8px; height: 150px; }
+.barGroup { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; }
+.barTrack {
+  flex: 1; width: 100%; display: flex; align-items: flex-end;
+  background: var(--bg4); border-radius: 6px; overflow: hidden;
+}
+.bar {
+  width: 100%; background: var(--accent); border-radius: 5px 5px 0 0;
+  transition: height .5s ease; min-height: 3px; opacity: .8;
+}
+.barLabel { font-size: .67rem; color: var(--text3); }
+
+/* Tool usage */
+.toolList { display: flex; flex-direction: column; gap: .8rem; }
+.toolRow { display: flex; align-items: center; gap: 10px; font-size: .77rem; }
+.toolName { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--accent2); width: 180px; flex-shrink: 0; }
+.toolBar { flex: 1; height: 4px; background: var(--bg4); border-radius: 999px; overflow: hidden; }
+.toolFill { height: 100%; background: var(--accent); border-radius: 999px; opacity: .7; }
+.toolCount { width: 22px; text-align: right; color: var(--text3); font-size: .7rem; }
+
+.tableCard { padding: 1.25rem; margin-bottom: 1.5rem; }
+
+.insightCard { padding: 1.25rem; }
+.insightGrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 1.25rem; }
+.insightItem { text-align: center; padding: 1rem; background: var(--bg4); border-radius: var(--radius); border: 1px solid var(--border); }
+.insightNum { font-size: 1.7rem; font-weight: 800; margin-bottom: 4px; letter-spacing: -.03em; }
+.insightLabel { font-size: .72rem; color: var(--text2); line-height: 1.45; }
+
+@media (max-width: 900px) {
+  .kpiGrid, .chartRow, .insightGrid { grid-template-columns: 1fr 1fr; }
+}

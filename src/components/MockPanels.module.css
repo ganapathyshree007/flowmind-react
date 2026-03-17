@@ -1,0 +1,49 @@
+.panel {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; transition: border-color .2s;
+}
+.flash { animation: cardFlash .5s ease; }
+@keyframes cardFlash {
+  0%,100% { border-color: var(--border); }
+  50% { border-color: var(--accent); box-shadow: 0 0 12px rgba(99,102,241,0.2); }
+}
+
+.header {
+  padding: .6rem 1rem; display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--border); background: var(--bg4);
+}
+.headerIcon { font-size: .85rem; }
+.headerTitle { font-size: .78rem; font-weight: 600; flex: 1; color: var(--text2); }
+.headerCount { font-size: .68rem; color: var(--text3); }
+
+/* Jira */
+.jiraRow {
+  display: flex; align-items: center; gap: 7px;
+  padding: .5rem 1rem; border-bottom: 1px solid var(--border);
+  font-size: .75rem; animation: slideInL .25s ease;
+}
+.jiraRow:last-child { border-bottom: none; }
+.ticketId { font-family: 'JetBrains Mono', monospace; font-size: .67rem; color: var(--text3); flex-shrink: 0; }
+.ticketTitle { flex: 1; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ticketAssignee { font-size: .67rem; color: var(--text3); flex-shrink: 0; }
+
+/* Slack */
+.slackRow {
+  display: flex; gap: 8px; padding: .55rem 1rem;
+  border-bottom: 1px solid var(--border); animation: slideInL .25s ease;
+}
+.slackRow:last-child { border-bottom: none; }
+.avatar {
+  width: 26px; height: 26px; border-radius: 6px; display: flex;
+  align-items: center; justify-content: center; font-size: .62rem; font-weight: 700; flex-shrink: 0;
+}
+.slackContent { flex: 1; min-width: 0; }
+.slackMeta { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.slackName { font-size: .72rem; font-weight: 600; color: var(--text); }
+.slackTime { font-size: .63rem; color: var(--text3); }
+.slackMsg { font-size: .73rem; color: var(--text2); line-height: 1.45; }
+
+/* Notion */
+.notionBody { padding: .8rem 1rem; }
+.notionTitle { font-size: .82rem; font-weight: 600; color: var(--text); margin-bottom: .4rem; }
+.notionText { font-size: .73rem; color: var(--text2); line-height: 1.65; white-space: pre-line; }

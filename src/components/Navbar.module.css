@@ -1,0 +1,105 @@
+/* Navbar — professional, minimal */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: 57px;
+  background: rgba(9,9,11,0.6);
+  backdrop-filter: blur(16px) saturate(160%);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.scrolled {
+  background: rgba(9,9,11,0.88);
+  border-bottom-color: var(--border);
+}
+
+.inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 1.25rem;
+  height: 100%; display: flex; align-items: center; gap: 0;
+}
+
+/* Brand */
+.brand {
+  display: flex; align-items: center; gap: 9px;
+  flex-shrink: 0; margin-right: 2rem; text-decoration: none;
+}
+.brandMark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent2); transition: .2s;
+}
+.brand:hover .brandMark { background: var(--accent); color: #fff; }
+.brandName {
+  font-size: .95rem; font-weight: 700; color: var(--text);
+  letter-spacing: -.02em;
+}
+.brandVersion {
+  font-size: .65rem; font-weight: 600; color: var(--text3);
+  background: var(--bg4); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border2);
+}
+
+/* Links */
+.links {
+  display: flex; align-items: center; gap: 2px; flex: 1;
+}
+.link {
+  padding: 6px 13px; border-radius: var(--radius);
+  font-size: .845rem; font-weight: 500; color: var(--text3);
+  text-decoration: none; transition: color .15s, background .15s;
+  border: 1px solid transparent;
+}
+.link:hover { color: var(--text); background: var(--bg3); }
+.link.active {
+  color: var(--text);
+  background: var(--bg3);
+  border-color: var(--border2);
+}
+
+/* Right */
+.right {
+  display: flex; align-items: center; gap: .75rem; margin-left: auto;
+}
+.liveChip {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .72rem; font-weight: 500; color: var(--text3);
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--bg3); border: 1px solid var(--border);
+}
+.liveDot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none; flex-direction: column; gap: 4px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 20px; height: 1.5px;
+  background: var(--text2); border-radius: 2px; transition: .25s;
+}
+
+/* Mobile Drawer */
+.drawer {
+  display: flex; flex-direction: column;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: .5rem;
+}
+.drawerLink {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radius);
+  font-size: .9rem; font-weight: 500; color: var(--text2);
+  text-decoration: none; transition: .15s;
+}
+.drawerLink:hover, .drawerActive {
+  color: var(--text); background: var(--bg3);
+}
+.drawerIcon { font-size: .8rem; color: var(--text3); }
+
+@media (max-width: 720px) {
+  .links { display: none; }
+  .hamburger { display: flex; }
+  .liveChip { display: none; }
+}
