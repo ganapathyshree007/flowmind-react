@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import styles from './ScoreCard.module.css';
 
 function AnimNum({ target, suffix = '' }) {

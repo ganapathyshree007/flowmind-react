@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useWorkflow } from '../hooks/useWorkflow';
 import StepItem from '../components/StepItem';
 import { JiraPanel, SlackPanel, NotionPanel } from '../components/MockPanels';

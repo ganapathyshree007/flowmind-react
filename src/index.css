@@ -222,3 +222,24 @@ select option { background: var(--bg3); }
 
 a { color: inherit; text-decoration: none; }
 button { font-family: 'Inter', sans-serif; }
+
+/* ---- Step 8: Additional keyframes & utilities ---- */
+@keyframes pulse-violet {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(124,58,237,0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.pulse-violet { animation: pulse-violet 2s infinite; }
+
+.btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+.btn-primary:active { transform: scale(0.97); }

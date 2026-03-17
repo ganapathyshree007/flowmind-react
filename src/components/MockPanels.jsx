@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import styles from './MockPanels.module.css';
 
 export function JiraPanel({ tickets, isFlashing }) {
