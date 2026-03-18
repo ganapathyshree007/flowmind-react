@@ -42,12 +42,13 @@ const templates = [
   },
 ];
 
-const demoPrompts = {
-  bug: 'We have a critical login crash affecting 400+ users on mobile Safari. Create a P1 Jira ticket assigned to Arjun K, post an urgent alert on Slack #dev-alerts, and create a Notion incident report.',
-  sprint: "It's Friday — create a sprint review Jira ticket, post the weekly engineering digest on Slack, and update the Notion sprint board.",
-  onboard: 'New engineer Priya Nair joins Monday as Frontend Developer. Create an onboarding ticket on Jira, send a welcome message on Slack, and create a Notion onboarding page.',
-  incident: 'Production is down! Payment service 500 errors. P1 escalation: create Jira ticket, page on-call team on Slack, create Notion post-mortem.',
-  feedback: '50 negative reviews about slow dashboard. Create a P2 Jira ticket, share summary on Slack #product, update Notion feedback log.',
+const templatePrompts = {
+  bug: 'Get all Jira tickets, find P1 and P2 bugs, create escalation tickets for unassigned ones, post summary to Slack #engineering',
+  sprint: 'Get all Jira tickets, summarize completed sprint work, post sprint review to Slack #general',
+  onboard: 'Create Jira onboarding ticket for new employee, post welcome message to Slack #general, create Notion onboarding page with first week plan',
+  incident: 'Get all P1 Jira tickets, post incident alert to Slack #general with ticket details, create incident report in Notion',
+  weekly: 'Get all Jira tickets from this week, summarize completed and in-progress work, post weekly digest to Slack #general',
+  feedback: 'Create Jira ticket for customer feedback, post feedback summary to Slack #general, create Notion page with feedback analysis',
 };
 
 export default function Templates() {
@@ -55,10 +56,13 @@ export default function Templates() {
   const [toast, setToast] = useState('');
   const [active, setActive] = useState(null);
 
+  const handleTemplateClick = (templatePrompt) => {
+    navigate('/dashboard', { state: { prompt: templatePrompt } });
+  };
+
   const handleUse = (t) => {
-    sessionStorage.setItem('fm_prefill', demoPrompts[t.key]);
-    setToast(`✨ "${t.name}" loaded! Navigating to dashboard...`);
-    setTimeout(() => navigate('/dashboard'), 1200);
+    const prompt = templatePrompts[t.key];
+    handleTemplateClick(prompt);
   };
 
   return (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../context/AuthContext';
 import styles from './Navbar.module.css';
 
 const NAV = [
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open,     setOpen]     = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 60);
@@ -84,15 +86,49 @@ export default function Navbar() {
             <span className={styles.liveDot} />
             Gemini 2.0 Flash
           </div>
-          <button
-            className={styles.hamburger}
-            onClick={() => setOpen(o => !o)}
-            aria-label="Toggle menu"
-          >
-            <span /><span /><span />
-          </button>
+            <button
+              className={styles.hamburger}
+              onClick={() => setOpen(o => !o)}
+              aria-label="Toggle menu"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
+
+          <div className={styles.navRight}>
+            {user && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '32px', height: '32px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
+                  display: 'flex', alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white', fontSize: '13px', fontWeight: '600'
+                }}>
+                  {user.name?.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ color: '#9ca3af', fontSize: '13px' }}>
+                  {user.name}
+                </span>
+                <button
+                  onClick={logout}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #2a2a3e',
+                    borderRadius: '8px',
+                    color: '#9ca3af',
+                    padding: '4px 12px',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
       {/* Mobile drawer */}
       <AnimatePresence>

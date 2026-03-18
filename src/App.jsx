@@ -5,6 +5,9 @@ import Dashboard from './pages/Dashboard';
 import Templates from './pages/Templates';
 import Analytics from './pages/Analytics';
 import History from './pages/History';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import { AuthProvider } from './context/AuthContext';
 
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
@@ -25,11 +28,33 @@ function AnimatedRoutes() {
         style={{ minHeight: '100vh' }}
       >
         <Routes location={location}>
-          <Route path="/"           element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard"  element={<Dashboard />} />
-          <Route path="/templates"  element={<Templates />} />
-          <Route path="/analytics"  element={<Analytics />} />
-          <Route path="/history"    element={<History />} />
+          <Route path="/login"      element={<Login />} />
+          <Route path="/signup"     element={<Signup />} />
+          <Route path="/"           element={
+            localStorage.getItem('flowmind_token') 
+              ? <Navigate to="/dashboard" replace /> 
+              : <Navigate to="/login" replace />
+          } />
+          <Route path="/dashboard"  element={
+            localStorage.getItem('flowmind_token')
+              ? <Dashboard />
+              : <Navigate to="/login" replace />
+          } />
+          <Route path="/templates"  element={
+            localStorage.getItem('flowmind_token')
+              ? <Templates />
+              : <Navigate to="/login" replace />
+          } />
+          <Route path="/analytics"  element={
+            localStorage.getItem('flowmind_token')
+              ? <Analytics />
+              : <Navigate to="/login" replace />
+          } />
+          <Route path="/history"    element={
+            localStorage.getItem('flowmind_token')
+              ? <History />
+              : <Navigate to="/login" replace />
+          } />
           <Route path="*"           element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </motion.div>
@@ -40,10 +65,12 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <main className="app-shell">
-        <AnimatedRoutes />
-      </main>
+      <AuthProvider>
+        <Navbar />
+        <main className="app-shell">
+          <AnimatedRoutes />
+        </main>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

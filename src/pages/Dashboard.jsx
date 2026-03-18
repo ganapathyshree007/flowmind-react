@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useWorkflow } from '../hooks/useWorkflow';
 import StepItem from '../components/StepItem';
 import { JiraPanel, SlackPanel, NotionPanel } from '../components/MockPanels';
 import ScoreCard from '../components/ScoreCard';
-import VoiceButton from '../components/VoiceButton';
 import Toast from '../components/Toast';
-import Orb from '../components/Orb';
+import Particles from '../components/Particles';
+import GeoAlert from '../components/GeoAlert';
+import NewsPanel from '../components/NewsPanel';
 import styles from './Dashboard.module.css';
 
 const DEMOS = [
@@ -27,6 +29,8 @@ const PROMPTS = {
 };
 
 export default function Dashboard() {
+  const location = useLocation();
+  const user = JSON.parse(localStorage.getItem('flowmind_user') || '{}')
   const [input,      setInput]      = useState('');
   const [toast,      setToast]      = useState('');
   const [flashJira,  setFlashJira]  = useState(false);
@@ -37,6 +41,13 @@ export default function Dashboard() {
   const prevSteps   = useRef([]);
 
   const { appState, steps, isRunning, score, history, run, reset, undo } = useWorkflow();
+
+  useEffect(() => {
+    if (location.state?.prompt) {
+      setInput(location.state.prompt);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Flash panels when tool actions complete
   useEffect(() => {
@@ -57,8 +68,27 @@ export default function Dashboard() {
   }, [steps.length]);
 
   useEffect(() => {
-    if (score) setToast(`✓ Workflow complete — ${score.saved}min saved in ${score.elapsed}s`);
-  }, [score]);
+    if (score) {
+      setToast(`✓ Workflow complete — ${score.saved}min saved in ${score.elapsed}s`);
+      
+      const token = localStorage.getItem('flowmind_token');
+      if (token) {
+        fetch('/api/save-workflow', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            prompt: input,
+            stepsCount: steps.length,
+            appsUpdated: ['Jira', 'Slack', 'Notion'],
+            timeSaved: steps.length * 3
+          })
+        });
+      }
+    }
+  }, [score, input, steps.length]);
 
   const handleRun = useCallback(async () => {
     if (!input.trim() || isRunning) return;
@@ -79,25 +109,9 @@ export default function Dashboard() {
   const statusStyle = isRunning ? 'running' : score ? 'done' : 'idle';
 
   return (
-    <div className={styles.page}>
-      {/* Orb background — 1080×1080 centred */}
-      <div style={{
-        position: 'fixed',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '1080px', height: '1080px',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}>
-        <div style={{ width: '1080px', height: '1080px', position: 'relative' }}>
-          <Orb
-            hue={40}
-            hoverIntensity={2}
-            rotateOnHover
-            forceHoverState={false}
-          />
-        </div>
-      </div>
+    <div className={styles.page} style={{ position: 'relative', zIndex: 1 }}>
+      <GeoAlert userEmail={user.email} />
+      <Particles />
 
       <Toast message={toast} onClose={() => setToast('')} />
 
@@ -145,7 +159,6 @@ export default function Dashboard() {
             <div className={styles.charHint}>{input.length} / 500</div>
 
             <div className={styles.inputRow}>
-              <VoiceButton onResult={setInput} onToast={setToast} currentValue={input} />
               {/* Animated Run button */}
               <motion.button
                 className={`${styles.runBtn} btn btn-primary`}
@@ -297,6 +310,8 @@ export default function Dashboard() {
           )}
         </div>
       )}
+
+      <NewsPanel />
     </div>
   );
 }
