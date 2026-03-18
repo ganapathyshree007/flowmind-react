@@ -6,12 +6,13 @@ export default function GeoAlert({ userEmail }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    async function fetchLocation() {
+    async function getLocation() {
       try {
-        const cached = sessionStorage.getItem('flowmind_location')
+        const cached = sessionStorage.getItem('flowmind_geo')
         if (cached) {
           setLocation(JSON.parse(cached))
           setShow(true)
+          setTimeout(() => setShow(false), 7000)
           return
         }
 
@@ -20,81 +21,124 @@ export default function GeoAlert({ userEmail }) {
 
         if (data.success) {
           sessionStorage.setItem(
-            'flowmind_location', 
+            'flowmind_geo',
             JSON.stringify(data)
           )
           setLocation(data)
           setShow(true)
-
-          setTimeout(() => setShow(false), 6000)
+          setTimeout(() => setShow(false), 7000)
         }
       } catch (err) {
-        console.log('Location fetch failed:', err.message)
+        console.log('GeoAlert error:', err.message)
       }
     }
 
-    if (userEmail) fetchLocation()
+    if (userEmail) getLocation()
   }, [userEmail])
 
   return (
     <AnimatePresence>
       {show && location && (
         <motion.div
-          initial={{ opacity: 0, y: -60, x: '-50%' }}
-          animate={{ opacity: 1, y: 0, x: '-50%' }}
-          exit={{ opacity: 0, y: -60, x: '-50%' }}
-          transition={{ type: 'spring', stiffness: 200 }}
+          initial={{ opacity: 0, y: -80 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -80 }}
+          transition={{ type: 'spring', stiffness: 180, damping: 20 }}
           style={{
             position: 'fixed',
-            top: '70px',
+            top: '72px',
             left: '50%',
+            transform: 'translateX(-50%)',
             zIndex: 9999,
             background: '#111118',
             border: '1px solid #7C3AED',
-            borderRadius: '12px',
-            padding: '12px 20px',
+            borderRadius: '14px',
+            padding: '14px 20px',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            boxShadow: '0 8px 32px rgba(124,58,237,0.3)',
-            minWidth: '300px'
+            gap: '12px',
+            boxShadow: '0 8px 32px rgba(124,58,237,0.25)',
+            minWidth: '320px',
+            maxWidth: '480px'
           }}
         >
-          <span style={{ fontSize: '20px' }}>📍</span>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(124,58,237,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '18px',
+            flexShrink: 0
+          }}>
+            📍
+          </div>
+
           <div style={{ flex: 1 }}>
-            <div style={{ 
-              fontSize: '13px', 
+            <div style={{
+              fontSize: '13px',
               fontWeight: '500',
-              color: 'white' 
+              color: 'white',
+              marginBottom: '3px'
             }}>
-              Login detected from {location.city}, {location.country}
+              Login detected from {location.city}, {location.region}
             </div>
-            <div style={{ 
-              fontSize: '11px', 
+            <div style={{
+              fontSize: '11px',
               color: '#9ca3af',
-              marginTop: '2px'
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              {location.isp} · {location.timezone}
+              {location.flag && (
+                <img
+                  src={location.flag}
+                  alt={location.country}
+                  style={{ 
+                    borderRadius: '2px',
+                    width: '16px',
+                    height: '12px'
+                  }}
+                />
+              )}
+              <span>{location.isp}</span>
+              <span style={{ color: '#333' }}>·</span>
+              <span>{location.timezone}</span>
             </div>
           </div>
-          {location.flag && (
-            <img 
-              src={location.flag} 
-              alt={location.country}
-              style={{ borderRadius: '2px' }}
-            />
-          )}
-          <button
-            onClick={() => setShow(false)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#9ca3af',
-              cursor: 'pointer',
-              fontSize: '16px',
-              padding: '0 4px'
-            }}
-          >×</button>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: '4px',
+            flexShrink: 0
+          }}>
+            <span style={{
+              fontSize: '11px',
+              background: 'rgba(124,58,237,0.2)',
+              color: '#a78bfa',
+              padding: '2px 8px',
+              borderRadius: '999px',
+              fontWeight: '500'
+            }}>
+              🔐 Secure Login
+            </span>
+            <button
+              onClick={() => setShow(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#555',
+                cursor: 'pointer',
+                fontSize: '18px',
+                lineHeight: 1,
+                padding: 0
+              }}
+            >×</button>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

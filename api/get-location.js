@@ -6,37 +6,41 @@ export default async function handler(req, res) {
 
   try {
     const forwarded = req.headers['x-forwarded-for']
-    const ip = forwarded 
+    const ip = forwarded
       ? forwarded.split(',')[0].trim()
-      : req.socket?.remoteAddress || '8.8.8.8'
+      : req.socket?.remoteAddress || ''
 
     const cleanIp = ip === '::1' || 
-      ip === '127.0.0.1' ? '8.8.8.8' : ip
+      ip === '127.0.0.1' || 
+      ip === '' ? '' : ip
 
-    const response = await fetch(
-      `http://ip-api.com/json/${cleanIp}?fields=status,country,countryCode,regionName,city,timezone,isp,query`
-    )
+    const token = process.env.IPINFO_TOKEN
+    const url = cleanIp
+      ? `https://ipinfo.io/${cleanIp}/json?token=${token}`
+      : `https://ipinfo.io/json?token=${token}`
+
+    const response = await fetch(url)
     const data = await response.json()
 
-    if (data.status === 'success') {
-      res.status(200).json({
-        success: true,
-        ip: data.query,
-        country: data.country,
-        countryCode: data.countryCode,
-        region: data.regionName,
-        city: data.city,
-        timezone: data.timezone,
-        isp: data.isp,
-        flag: `https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png`
-      })
-    } else {
-      res.status(200).json({
-        success: false,
-        error: 'Could not detect location'
-      })
-    }
+    const countryCode = data.country?.toLowerCase() || ''
+
+    res.status(200).json({
+      success: true,
+      ip: data.ip,
+      city: data.city || 'Unknown',
+      region: data.region || '',
+      country: data.country || '',
+      countryName: data.country || '',
+      timezone: data.timezone || '',
+      isp: data.org || '',
+      flag: countryCode
+        ? `https://flagcdn.com/24x18/${countryCode}.png`
+        : ''
+    })
   } catch (err) {
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ 
+      success: false,
+      error: err.message 
+    })
   }
 }
