@@ -51,11 +51,15 @@ export default function NewsPanel() {
 
   return (
     <div style={{
-      background: '#111118',
-      border: '1px solid #1e1e2e',
+      background: 'rgba(17, 17, 24, 0.7)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      border: '1px solid rgba(124,58,237,0.2)',
       borderRadius: '16px',
       padding: '20px',
-      marginTop: '24px'
+      marginTop: '24px',
+      position: 'relative',
+      zIndex: 1
     }}>
       <div style={{
         display: 'flex',
@@ -129,8 +133,9 @@ export default function NewsPanel() {
               }}
               style={{
                 display: 'block',
-                background: '#0a0a0f',
-                border: '1px solid #1e1e2e',
+                background: 'rgba(10, 10, 15, 0.6)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(30,30,46,0.8)',
                 borderRadius: '10px',
                 padding: '12px',
                 textDecoration: 'none',

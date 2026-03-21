@@ -6,7 +6,7 @@ import StepItem from '../components/StepItem';
 import { JiraPanel, SlackPanel, NotionPanel } from '../components/MockPanels';
 import ScoreCard from '../components/ScoreCard';
 import Toast from '../components/Toast';
-import Particles from '../components/Particles';
+import Orb from '../components/Orb';
 import GeoAlert from '../components/GeoAlert';
 import NewsPanel from '../components/NewsPanel';
 import styles from './Dashboard.module.css';
@@ -111,7 +111,32 @@ export default function Dashboard() {
   return (
     <div className={styles.page} style={{ position: 'relative', zIndex: 1 }}>
       <GeoAlert userEmail={user.email} />
-      <Particles />
+
+      {/* Orb background */}
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        background: '#0a0a0f'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '1400px',
+          height: '1400px',
+          opacity: 0.75
+        }}>
+          <Orb hue={260} hoverIntensity={3} rotateOnHover={true} forceHoverState={false} />
+        </div>
+      </div>
 
       <Toast message={toast} onClose={() => setToast('')} />
 

@@ -8,33 +8,31 @@ export default function GeoAlert({ userEmail }) {
   useEffect(() => {
     async function getLocation() {
       try {
-        const cached = sessionStorage.getItem('flowmind_geo')
-        if (cached) {
-          setLocation(JSON.parse(cached))
-          setShow(true)
-          setTimeout(() => setShow(false), 7000)
-          return
-        }
-
         const res = await fetch('/api/get-location')
         const data = await res.json()
-
         if (data.success) {
-          sessionStorage.setItem(
-            'flowmind_geo',
-            JSON.stringify(data)
-          )
           setLocation(data)
           setShow(true)
           setTimeout(() => setShow(false), 7000)
         }
       } catch (err) {
-        console.log('GeoAlert error:', err.message)
+        console.log('Location error:', err.message)
       }
     }
-
     if (userEmail) getLocation()
   }, [userEmail])
+
+  function cleanISP(isp) {
+    if (!isp) return ''
+    return isp
+      .replace(/^AS\d+\s+/, '')
+      .replace(/\s+AS\s+for.*$/i, '')
+      .replace(/\s+GPRS.*$/i, '')
+      .replace(/\s+Ltd\.?/i, '')
+      .replace(/\s+Limited/i, '')
+      .replace(/\s+Pvt\.?/i, '')
+      .trim()
+  }
 
   return (
     <AnimatePresence>
@@ -43,7 +41,11 @@ export default function GeoAlert({ userEmail }) {
           initial={{ opacity: 0, y: -80 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -80 }}
-          transition={{ type: 'spring', stiffness: 180, damping: 20 }}
+          transition={{ 
+            type: 'spring', 
+            stiffness: 180, 
+            damping: 20 
+          }}
           style={{
             position: 'fixed',
             top: '72px',
@@ -58,13 +60,13 @@ export default function GeoAlert({ userEmail }) {
             alignItems: 'center',
             gap: '12px',
             boxShadow: '0 8px 32px rgba(124,58,237,0.25)',
-            minWidth: '320px',
+            minWidth: '340px',
             maxWidth: '480px'
           }}
         >
           <div style={{
-            width: '36px',
-            height: '36px',
+            width: '38px',
+            height: '38px',
             borderRadius: '50%',
             background: 'rgba(124,58,237,0.15)',
             display: 'flex',
@@ -79,9 +81,9 @@ export default function GeoAlert({ userEmail }) {
           <div style={{ flex: 1 }}>
             <div style={{
               fontSize: '13px',
-              fontWeight: '500',
+              fontWeight: '600',
               color: 'white',
-              marginBottom: '3px'
+              marginBottom: '4px'
             }}>
               Login detected from {location.city}, {location.region}
             </div>
@@ -90,7 +92,8 @@ export default function GeoAlert({ userEmail }) {
               color: '#9ca3af',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              flexWrap: 'wrap'
             }}>
               {location.flag && (
                 <img
@@ -98,12 +101,17 @@ export default function GeoAlert({ userEmail }) {
                   alt={location.country}
                   style={{ 
                     borderRadius: '2px',
-                    width: '16px',
+                    width: '18px',
                     height: '12px'
                   }}
                 />
               )}
-              <span>{location.isp}</span>
+              <span style={{ 
+                color: '#a78bfa',
+                fontWeight: '500'
+              }}>
+                {cleanISP(location.isp)}
+              </span>
               <span style={{ color: '#333' }}>·</span>
               <span>{location.timezone}</span>
             </div>
@@ -113,16 +121,17 @@ export default function GeoAlert({ userEmail }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-end',
-            gap: '4px',
+            gap: '6px',
             flexShrink: 0
           }}>
             <span style={{
               fontSize: '11px',
               background: 'rgba(124,58,237,0.2)',
               color: '#a78bfa',
-              padding: '2px 8px',
+              padding: '3px 10px',
               borderRadius: '999px',
-              fontWeight: '500'
+              fontWeight: '500',
+              whiteSpace: 'nowrap'
             }}>
               🔐 Secure Login
             </span>

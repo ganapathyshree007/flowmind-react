@@ -44,18 +44,27 @@
   --radius-lg:    14px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s ease; }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
+  background: #0a0a0f;
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Orb container hover morphing */
+.orb-container {
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.orb-container:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
 }
 
 /* SCROLLBAR */

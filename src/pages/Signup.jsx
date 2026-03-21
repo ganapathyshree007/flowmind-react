@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Orb from '../components/Orb'
 
 export default function Signup() {
   const navigate = useNavigate()
@@ -40,8 +41,34 @@ export default function Signup() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: 'Inter, sans-serif'
+      fontFamily: 'Inter, sans-serif',
+      position: 'relative'
     }}>
+      {/* Orb background */}
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        background: '#0a0a0f'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '1400px',
+          height: '1400px',
+          opacity: 0.75
+        }}>
+          <Orb hue={260} hoverIntensity={3} rotateOnHover={true} forceHoverState={false} />
+        </div>
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,7 +79,9 @@ export default function Signup() {
           borderRadius: '20px',
           padding: '40px',
           width: '100%',
-          maxWidth: '400px'
+          maxWidth: '400px',
+          position: 'relative',
+          zIndex: 1
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>

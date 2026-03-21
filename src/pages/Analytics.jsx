@@ -1,4 +1,5 @@
 import styles from './Analytics.module.css';
+import NewsPanel from '../components/NewsPanel';
 
 const metrics = [
   { label: 'Workflows Run',   value: 24,   suffix: '',   trend: '+8 this week', trendPos: true },
@@ -135,6 +136,8 @@ export default function Analytics() {
           ))}
         </div>
       </div>
+
+      <NewsPanel />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import styles from './Landing.module.css';
 import { useNavigate } from 'react-router-dom';
+import Orb from '../components/Orb';
 
 const features = [
   { icon: '🧠', title: 'Live AI Reasoning', desc: 'Watch FlowMind think step-by-step in real time. Every decision visible, every tool call transparent.' },
@@ -66,7 +67,27 @@ export default function Landing() {
       {/* Particle Canvas */}
       <canvas ref={canvasRef} className={styles.canvas} />
 
-      {/* Orbs */}
+      {/* WebGL Orb background */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#0a0a0f'
+      }}>
+        <div style={{ width: '900px', height: '900px', position: 'relative', opacity: 0.6 }}>
+          <Orb hue={260} hoverIntensity={3} rotateOnHover={true} forceHoverState={false} />
+        </div>
+      </div>
+
+      {/* CSS Orbs */}
       <div className={styles.orb1} />
       <div className={styles.orb2} />
       <div className={styles.orb3} />

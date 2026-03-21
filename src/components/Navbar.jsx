@@ -28,10 +28,12 @@ export default function Navbar() {
   return (
     <header
       className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}
-      style={scrolled ? {
-        background: 'rgba(10,10,15,0.95)',
-        backdropFilter: 'blur(20px)',
-      } : {}}
+      style={{
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        background: scrolled ? 'rgba(10,10,15,0.95)' : 'rgba(10, 10, 15, 0.7)',
+        borderBottom: '1px solid rgba(124,58,237,0.2)',
+      }}
     >
       <div className={styles.inner}>
 

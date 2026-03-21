@@ -10,9 +10,9 @@ import Signup from './pages/Signup';
 import { AuthProvider } from './context/AuthContext';
 
 const pageVariants = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: .28, ease: [.25,.46,.45,.94] } },
-  exit:    { opacity: 0, y: -6, transition: { duration: .18, ease: 'easeIn' } },
+  initial: { opacity: 0, scale: 0.98 },
+  animate: { opacity: 1, scale: 1,    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, scale: 1.02, transition: { duration: 0.2,  ease: 'easeIn' } },
 };
 
 function AnimatedRoutes() {

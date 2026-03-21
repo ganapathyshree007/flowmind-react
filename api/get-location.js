@@ -22,7 +22,14 @@ export default async function handler(req, res) {
     const response = await fetch(url)
     const data = await response.json()
 
-    const countryCode = data.country?.toLowerCase() || ''
+    const parts = (data.org || '').split(' ')
+    const ispName = parts.slice(1).join(' ')
+      .replace(/\s+Ltd\.?/i, '')
+      .replace(/\s+Limited/i, '')
+      .replace(/\s+Pvt\.?/i, '')
+      .replace(/\s+AS\s+for.*/i, '')
+      .replace(/\s+GPRS.*/i, '')
+      .trim()
 
     res.status(200).json({
       success: true,
@@ -30,11 +37,11 @@ export default async function handler(req, res) {
       city: data.city || 'Unknown',
       region: data.region || '',
       country: data.country || '',
-      countryName: data.country || '',
+      countryCode: data.country?.toLowerCase() || '',
       timezone: data.timezone || '',
-      isp: data.org || '',
-      flag: countryCode
-        ? `https://flagcdn.com/24x18/${countryCode}.png`
+      isp: ispName,
+      flag: data.country
+        ? `https://flagcdn.com/24x18/${data.country.toLowerCase()}.png`
         : ''
     })
   } catch (err) {
